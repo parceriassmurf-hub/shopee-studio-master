@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>Shopee Studio — Master Command Center</title>
+  <style>
+    :root{
+      --bg:#07111f;--panel:#0c1a2c;--panel2:#102238;--line:#203a58;
+      --text:#f4f7fb;--muted:#9fb0c5;--blue:#4d8dff;--green:#32e6a1;
+      --yellow:#ffd166;--red:#ff6b6b;--purple:#a970ff;--cyan:#53d8ff;
+      --shadow:0 18px 60px rgba(0,0,0,.25);--radius:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:linear-gradient(180deg,#06101d 0%,#07111f 35%,#081522 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+    .wrap{max-width:1450px;margin:auto;padding:22px}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(7,17,31,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(32,58,88,.7)}
+    .topbar-inner{max-width:1450px;margin:auto;padding:12px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800}.logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--purple));display:grid;place-items:center}
+    nav{display:flex;gap:6px;overflow:auto;white-space:nowrap}.nav a{padding:8px 10px;border-radius:9px;color:var(--muted);font-size:13px}.nav a:hover{background:var(--panel2);color:#fff}
+    .hero{padding:55px 0 30px;display:grid;grid-template-columns:1.5fr .8fr;gap:22px;align-items:stretch}
+    .hero-card,.card{background:linear-gradient(180deg,rgba(16,34,56,.94),rgba(10,25,42,.94));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-card{padding:34px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--cyan);font-weight:800}
+    h1{font-size:clamp(34px,5vw,62px);line-height:1.02;margin:10px 0 14px;letter-spacing:-.04em}
+    h2{font-size:30px;letter-spacing:-.025em;margin:0 0 7px} h3{margin:0 0 7px}
+    p{color:var(--muted);margin:7px 0}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--panel2);padding:11px 15px;border-radius:10px;color:#fff;font-weight:700;cursor:pointer}.btn.primary{background:var(--blue);border-color:var(--blue)}.btn:hover{filter:brightness(1.08)}
+    .status-box{padding:25px}.big-status{font-size:28px;font-weight:900;margin:6px 0 16px}.status-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}.status-row:last-child{border-bottom:0}
+    .badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:900;white-space:nowrap}.done{background:rgba(50,230,161,.12);color:var(--green)}.doing{background:rgba(83,216,255,.12);color:var(--cyan)}.pending{background:rgba(255,209,102,.12);color:var(--yellow)}.paused{background:rgba(169,112,255,.12);color:#c9a8ff}.risk{background:rgba(255,107,107,.12);color:var(--red)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+    .card{padding:20px}.metric{font-size:32px;font-weight:900}.metric-label{font-size:13px;color:var(--muted)}
+    section{scroll-margin-top:78px;margin:42px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:15px}
+    .section-head p{margin:0}.searchbar{display:flex;gap:9px;flex-wrap:wrap}.searchbar input,.searchbar select{background:#09182a;border:1px solid var(--line);color:#fff;border-radius:10px;padding:10px 12px;outline:none}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:15px}.table{width:100%;border-collapse:collapse;min-width:760px}.table th,.table td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px}.table th{background:#102238;color:#fff}.table tr:last-child td{border-bottom:0}
+    .timeline{display:grid;gap:12px}.step{display:grid;grid-template-columns:52px 1fr auto;gap:14px;align-items:start;padding:17px;border:1px solid var(--line);border-radius:15px;background:rgba(12,26,44,.7)}.num{width:38px;height:38px;border-radius:12px;background:#142b47;display:grid;place-items:center;font-weight:900;color:var(--cyan)}
+    .step ul,.card ul{margin:10px 0 0;padding-left:20px;color:var(--muted)}li{margin:4px 0}.small{font-size:12px}.muted{color:var(--muted)}
+    .plan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.plan{position:relative}.plan h3{font-size:21px}.price{font-size:32px;font-weight:900;margin:5px 0}.plan ul{padding-left:18px}.plan .tag{position:absolute;top:15px;right:15px}
+    .rule{padding:15px;border-left:3px solid var(--blue);background:rgba(77,141,255,.07);border-radius:0 12px 12px 0;margin:10px 0}
+    .columns{display:grid;grid-template-columns:1fr 1fr;gap:15px}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#050d18;border:1px solid #182c44;padding:14px;border-radius:12px;color:#b9d9ff;overflow:auto;font-size:12px}
+    .footer{border-top:1px solid var(--line);margin-top:60px;padding:28px 0 50px;color:var(--muted);font-size:12px}
+    .hide{display:none!important}.note{color:var(--yellow)}.good{color:var(--green)}
+    @media(max-width:1050px){.hero{grid-template-columns:1fr}.grid4,.plan-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:720px){.wrap{padding:14px}.topbar-inner{padding:10px 14px}.brand span{display:none}nav{display:none}.hero{padding-top:28px}.hero-card{padding:24px}h1{font-size:40px}h2{font-size:25px}.grid,.grid4,.plan-grid,.columns{grid-template-columns:1fr}.step{grid-template-columns:42px 1fr}.step>.badge{grid-column:2}.table{min-width:680px}.section-head{align-items:start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#inicio"><span class="logo">SS</span><span>Shopee Studio — Master</span></a>
+    <nav>
+      <a href="#onde-paramos">Onde paramos</a><a href="#roadmap">Roadmap</a><a href="#planos">Planos</a><a href="#downloader">Downloader</a><a href="#ia">IA</a><a href="#infra">Infra</a><a href="#testes">Testes</a><a href="#decisoes">Decisões</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="inicio">
+  <div class="hero">
+    <div class="hero-card">
+      <div class="eyebrow">Arquivo mestre do projeto</div>
+      <h1>Master Command Center</h1>
+      <p>Organização, memória, roadmap e documentação do Shopee Studio. Este site é <strong>separado do SaaS</strong>: não deve alterar banco, usuários, configurações ou funcionalidades do produto.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#onde-paramos">Ver onde paramos</a>
+        <a class="btn" href="#roadmap">Abrir roadmap</a>
+        <a class="btn" href="#changelog">Ver histórico</a>
+      </div>
+    </div>
+    <div class="hero-card status-box">
+      <div class="eyebrow">Estado atual</div>
+      <div class="big-status">Master V2 pronta para commit</div>
+      <div class="status-row"><span>Master</span><span class="badge doing">EM ORGANIZAÇÃO</span></div>
+      <div class="status-row"><span>SaaS</span><span class="badge doing">EM DESENVOLVIMENTO</span></div>
+      <div class="status-row"><span>Downloader próprio</span><span class="badge paused">PAUSADO</span></div>
+      <div class="status-row"><span>Pagamentos reais</span><span class="badge pending">PENDENTE</span></div>
+      <div class="status-row"><span>Site Master ↔ SaaS</span><span class="badge done">SEPARADOS</span></div>
+    </div>
+  </div>
+
+  <section id="onde-paramos">
+    <div class="section-head"><div><h2>📍 Onde paramos?</h2><p>Esta é a página que deve ser consultada antes de continuar o projeto.</p></div></div>
+    <div class="grid4">
+      <div class="card"><div class="metric">1</div><div class="metric-label">Master: publicar V2</div><p class="small">Colar este arquivo no <code>index.html</code> e fazer commit.</p></div>
+      <div class="card"><div class="metric">🟡</div><div class="metric-label">Downloader</div><p class="small">Projeto próprio definido, implementação definitiva ainda não concluída.</p></div>
+      <div class="card"><div class="metric">4</div><div class="metric-label">Planos definidos</div><p class="small">Free, Starter, Pro e Studio.</p></div>
+      <div class="card"><div class="metric">📱</div><div class="metric-label">Regra de UX</div><p class="small">Mobile-first. A maior parte dos usuários deve ser atendida primeiro no celular.</p></div>
+    </div>
+    <div class="rule"><strong>Próxima ação imediata:</strong> publicar o Master V2. Depois, voltar ao roadmap do SaaS sem misturar o repositório de organização com o produto.</div>
+  </section>
+
+  <section id="roadmap">
+    <div class="section-head">
+      <div><h2>🗺️ Roadmap mestre</h2><p>Separação entre o que já existe, o que está em trabalho, o que falta e o que está pausado.</p></div>
+      <div class="searchbar"><input id="search" placeholder="Buscar no roadmap..."><select id="filter"><option value="all">Todos</option><option value="done">Feito</option><option value="doing">Em desenvolvimento</option><option value="pending">Pendente</option><option value="paused">Pausado</option></select></div>
+    </div>
+    <div class="timeline" id="roadmap-list">
+      <article class="step" data-status="done" data-text="fundação infraestrutura supabase autenticação produtos armazenamento">
+        <div class="num">01</div><div><h3>Fundação do SaaS</h3><p>Base do produto, autenticação, produtos, armazenamento e estrutura de processamento.</p><ul><li>Supabase já aparece no código.</li><li>Produtos possuem usuário, status e caminhos de vídeo.</li><li>Storage <code>videos</code> já é utilizado.</li></ul></div><span class="badge done">FEITO / EXISTENTE</span>
+      </article>
+      <article class="step" data-status="doing" data-text="entrada vídeo upload processamento presets editor">
+        <div class="num">02</div><div><h3>Entrada e processamento de vídeo</h3><p>Receber o vídeo, processar e devolver o resultado ao usuário.</p><ul><li>Upload e validação já aparecem no código.</li><li>Existe fluxo de processamento e callback.</li><li>Presets/estilos de vídeo já foram planejados no projeto.</li><li>Precisa de bateria de testes e acabamento.</li></ul></div><span class="badge doing">EM DESENVOLVIMENTO</span>
+      </article>
+      <article class="step" data-status="paused" data-text="downloader shopee download sem watermark copiarlink usercontent mp4">
+        <div class="num">03</div><div><h3>Downloader próprio da Shopee</h3><p>Nosso diferencial: o SaaS deve buscar o vídeo por conta própria, sem colocar um site externo como etapa para o usuário.</p><ul><li>O projeto antigo já tentava localizar um <code>videoUrl</code>.</li><li>Foram encontrados <code>extractShopeeVideo()</code>, <code>safeShopeeFetch()</code> e validação de hosts/redirects.</li><li>Também apareceu referência a <code>usercontent.com</code>.</li><li>O resultado antigo tinha marca d’água/qualidade ruim.</li><li>A implementação definitiva ainda não está pronta.</li><li><strong>Etapa 2 do trabalho do downloader deve ser retomada quando houver créditos para continuar a implementação no Lovable.</strong></li></ul></div><span class="badge paused">PAUSADO</span>
+      </article>
+      <article class="step" data-status="doing" data-text="legenda hashtags ia captions hooks ctas">
+        <div class="num">04</div><div><h3>IA para conteúdo</h3><p>Transformar produto/vídeo em conteúdo pronto para afiliado.</p><ul><li>Legenda e hashtags já existem no fluxo.</li><li>Há fallback caso a IA não esteja disponível.</li><li>Próximos níveis: hooks, CTAs, benefícios e roteiros.</li></ul></div><span class="badge doing">BASE EXISTENTE</span>
+      </article>
+      <article class="step" data-status="pending" data-text="edição inteligente texto ocr reconhecimento posicionamento produto sobreposição">
+        <div class="num">05</div><div><h3>Edição inteligente</h3><p>O sistema deve entender o vídeo antes de colocar elementos por cima.</p><ul><li>Reconhecer texto que já existe no vídeo.</li><li>Evitar cobrir produto ou texto importante.</li><li>Escolher uma área melhor para novos textos.</li><li>Ter versão básica e avançada conforme o plano.</li></ul></div><span class="badge pending">PENDENTE</span>
+      </article>
+      <article class="step" data-status="pending" data-text="narração voz ia elevenlabs cartesia audio">
+        <div class="num">06</div><div><h3>Narração com IA</h3><p>Gerar voz para transformar vídeo de produto em criativo mais completo.</p><ul><li>Recurso reservado aos planos superiores.</li><li>Studio: 100 narrações IA/mês na estrutura atual.</li><li>Fornecedor/voz definitiva deve ser decidido na implementação.</li></ul></div><span class="badge pending">PENDENTE</span>
+      </article>
+      <article class="step" data-status="doing" data-text="fila agendamento lote produção massa">
+        <div class="num">07</div><div><h3>Fila, agendamento e produção em lote</h3><p>Reduzir trabalho repetitivo do afiliado.</p><ul><li>Fila e agendamento já aparecem no código.</li><li>Existe <code>videos_queue</code>.</li><li>Limites de lote variam por plano.</li><li>Precisa validar todos os cenários de falha e concorrência.</li></ul></div><span class="badge doing">BASE EXISTENTE</span>
+      </article>
+      <article class="step" data-status="doing" data-text="telegram entrega vídeo caption horário">
+        <div class="num">08</div><div><h3>Entrega pelo Telegram</h3><p>Receber o vídeo pronto com legenda/hashtags e, quando configurado, no horário escolhido.</p><ul><li>Envio imediato já existe no código.</li><li>Agendamento pelo horário preferido também existe.</li><li>Há geração de caption e integração com bot.</li></ul></div><span class="badge doing">BASE EXISTENTE</span>
+      </article>
+      <article class="step" data-status="pending" data-text="planos free starter pro studio limites créditos">
+        <div class="num">09</div><div><h3>Planos e regras comerciais</h3><p>Transformar a matriz de recursos em regras reais no SaaS.</p><ul><li>Preços e benefícios já foram definidos em nível de produto.</li><li>Falta implementar limites, bloqueios, contagem e comportamento por plano.</li><li>Recursos diferenciados devem ficar nos planos melhores.</li></ul></div><span class="badge pending">PENDENTE</span>
+      </article>
+      <article class="step" data-status="pending" data-text="pagamento asaas pix cartão boleto assinatura webhook">
+        <div class="num">10</div><div><h3>Pagamentos</h3><p>Assinaturas e cobrança real.</p><ul><li>Asaas foi escolhido como plataforma planejada.</li><li>Cartão, Pix e boleto foram previstos.</li><li>Assinatura recorrente e webhooks foram previstos.</li><li>O tester visual não representa cobrança real conectada.</li></ul></div><span class="badge pending">PENDENTE</span>
+      </article>
+      <article class="step" data-status="pending" data-text="segurança ssrf callback secret upload limites">
+        <div class="num">11</div><div><h3>Segurança e confiabilidade</h3><p>Auditar tudo antes de produção.</p><ul><li>Já existem proteções como segredo de callback, comparação segura, UUID e allowlist.</li><li>Há proteção para hosts privados e redirects na parte de busca Shopee.</li><li>Falta auditoria completa, abuso, limites, concorrência e observabilidade.</li></ul></div><span class="badge pending">AUDITORIA</span>
+      </article>
+      <article class="step" data-status="pending" data-text="testes mobile ux publicação lançamento">
+        <div class="num">12</div><div><h3>Testes, UX e lançamento</h3><p>Garantir que o produto seja simples para afiliados e sólido para produção.</p><ul><li>Mobile-first como regra.</li><li>Linguagem simples, sem excesso de termos técnicos.</li><li>Testes de ponta a ponta.</li><li>Revisão de performance, erros e experiência.</li></ul></div><span class="badge pending">PENDENTE</span>
+      </article>
+    </div>
+  </section>
+
+  <section id="planos">
+    <div class="section-head"><div><h2>💳 Planos definidos</h2><p>Estrutura comercial do tester. Valores abaixo são os valores definidos para a versão planejada.</p></div></div>
+    <div class="plan-grid">
+      <div class="card plan"><h3>FREE</h3><p>Experimentar</p><div class="price">R$ 0</div><p>/mês</p><ul><li>10 vídeos/mês</li><li>Edição automática</li><li>2 presets</li><li>10 legendas IA/mês</li><li>Download do resultado</li><li>Telegram limitado</li></ul></div>
+      <div class="card plan"><h3>STARTER</h3><p>Produzir</p><div class="price">R$ 19,90</div><p>/mês</p><ul><li>100 vídeos/mês</li><li>Todos os presets</li><li>Legenda + hashtags IA</li><li>Hooks e CTAs básicos</li><li>Fila + agendamento</li><li>Lote de até 5</li><li>Persona da marca</li></ul></div>
+      <div class="card plan"><span class="badge doing tag">MAIS POPULAR</span><h3>PRO</h3><p>Otimizar</p><div class="price">R$ 49,90</div><p>/mês</p><ul><li>300 vídeos/mês</li><li>Texto inteligente</li><li>Reconhecimento de texto</li><li>Posicionamento inteligente</li><li>Hooks, benefícios e CTAs IA</li><li>Roteiros IA</li><li>Lote de até 20</li><li>Fila prioritária</li></ul></div>
+      <div class="card plan"><span class="badge paused tag">AUTOMAÇÃO MÁXIMA</span><h3>STUDIO</h3><p>Automatizar</p><div class="price">R$ 99,90</div><p>/mês</p><ul><li>700 vídeos/mês</li><li>Recursos inteligentes avançados</li><li>100 narrações IA/mês</li><li>Criativo automático completo</li><li>Lote de até 50</li><li>Produção em massa</li><li>Prioridade máxima</li></ul></div>
+    </div>
+    <div class="rule"><strong>Regra de produto:</strong> o afiliado não precisa entender a tecnologia por trás do recurso. O nome exibido deve explicar o benefício em linguagem simples.</div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Recurso</th><th>Free</th><th>Starter</th><th>Pro</th><th>Studio</th></tr></thead>
+        <tbody>
+          <tr><td>Vídeos por mês</td><td>10</td><td>100</td><td>300</td><td>700</td></tr>
+          <tr><td>Edição automática</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Fila e agendamento</td><td>—</td><td>Limitado</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Texto inteligente</td><td>—</td><td>—</td><td>✓</td><td>Avançado</td></tr>
+          <tr><td>Reconhecimento de texto</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Roteiros prontos</td><td>—</td><td>—</td><td>✓</td><td>Avançado</td></tr>
+          <tr><td>Narração com IA</td><td>—</td><td>—</td><td>—</td><td>100/mês</td></tr>
+          <tr><td>Vídeo completo automático</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="downloader">
+    <div class="section-head"><div><h2>🎬 Downloader próprio</h2><p>Registro completo do que foi descoberto sem marcar a etapa como concluída.</p></div></div>
+    <div class="columns">
+      <div class="card">
+        <h3>Objetivo</h3>
+        <p>O usuário cola um link da Shopee e o <strong>nosso SaaS</strong> tenta obter o vídeo para o fluxo de produção. Não queremos colocar CopiarLink ou outro site externo dentro do produto.</p>
+        <div class="rule"><strong>Diferencial desejado:</strong> baixar o vídeo com a melhor qualidade possível e sem depender de um downloader externo como etapa da experiência.</div>
+        <h3>O que já encontramos</h3>
+        <ul>
+          <li><code>extractShopeeVideo()</code></li>
+          <li><code>parseAllowedShopeeUrl()</code></li>
+          <li><code>safeShopeeFetch()</code></li>
+          <li>allowlist de hosts Shopee</li>
+          <li>validação de redirects</li>
+          <li>busca por URL <code>.mp4</code> no HTML</li>
+          <li>campo/fluxo de <code>videoUrl</code></li>
+          <li>referência a <code>usercontent.com</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>O que NÃO está confirmado</h3>
+        <ul>
+          <li>Que o método atual encontra sempre o arquivo original.</li>
+          <li>Que o <code>usercontent.com</code> encontrado é a fonte definitiva do vídeo.</li>
+          <li>Que o vídeo obtido está sem marca d’água.</li>
+          <li>Que a qualidade é a melhor disponível.</li>
+          <li>Que o downloader está pronto para produção.</li>
+        </ul>
+        <h3>Estado</h3>
+        <p><span class="badge paused">PAUSADO / RETOMAR</span></p>
+        <p class="small">A etapa de implementação foi reduzida/organizada para ser retomada quando os créditos do Lovable voltarem. <strong>Não apagar a Etapa 2 do plano do downloader.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ia">
+    <div class="section-head"><div><h2>🤖 IA e criativos</h2><p>Do texto simples até a produção automática completa.</p></div></div>
+    <div class="grid">
+      <div class="card"><h3>Já existe na base</h3><ul><li>Geração de legenda.</li><li>Geração de hashtags.</li><li>Fallback quando a API não está disponível.</li><li>Integração com gateway de IA no código mostrado.</li></ul></div>
+      <div class="card"><h3>Próximo nível</h3><ul><li>Hooks.</li><li>CTAs.</li><li>Benefícios.</li><li>Roteiros.</li><li>Persona da marca.</li></ul></div>
+      <div class="card"><h3>Nível avançado</h3><ul><li>Reconhecimento do texto existente.</li><li>Escolha inteligente de posição.</li><li>Narração.</li><li>Vídeo completo automático.</li><li>Produção em massa.</li></ul></div>
+    </div>
+    <div class="rule"><strong>Regra:</strong> tecnologia complexa fica por trás. Na interface, dizer o que acontece: “Reconhece o texto do vídeo”, “Escolhe o melhor lugar para o texto”, “Cria uma narração”, etc.</div>
+  </section>
+
+  <section id="edicao">
+    <div class="section-head"><div><h2>🎨 Edição inteligente</h2><p>Ideia central: não destruir a composição do vídeo original.</p></div></div>
+    <div class="grid">
+      <div class="card"><h3>Problema</h3><p>Às vezes o vídeo já tem texto. Colocar outra legenda em cima pode esconder produto, preço ou informação importante.</p></div>
+      <div class="card"><h3>Solução planejada</h3><p>Detectar texto e áreas relevantes e escolher uma posição melhor para novos elementos.</p></div>
+      <div class="card"><h3>Diferencial comercial</h3><p>Recursos mais inteligentes ficam nos planos Pro e Studio, em vez de entregar toda a automação avançada no plano gratuito.</p></div>
+    </div>
+  </section>
+
+  <section id="infra">
+    <div class="section-head"><div><h2>⚙️ Infraestrutura e código já visto</h2><p>Registro do que apareceu nos arquivos enviados/analisados durante o projeto.</p></div></div>
+    <div class="grid">
+      <div class="card"><h3>Vídeos / Storage</h3><ul><li>Bucket <code>videos</code>.</li><li>Upload por caminho do usuário.</li><li><code>video_path</code>.</li><li><code>video_url</code>.</li><li>URL assinada.</li><li>Status de processamento.</li></ul></div>
+      <div class="card"><h3>Processamento</h3><ul><li>Callback público de vídeo processado.</li><li>Arquivo multipart.</li><li>Retry de falhas.</li><li><code>video_status</code>.</li><li><code>video_erro</code>.</li><li>tentativas de processamento.</li></ul></div>
+      <div class="card"><h3>Fila / entrega</h3><ul><li><code>videos_queue</code>.</li><li><code>agendado_para</code>.</li><li><code>scheduled_at</code>.</li><li>Telegram imediato ou agendado.</li><li>caption + hashtags.</li></ul></div>
+      <div class="card"><h3>Segurança já encontrada</h3><ul><li><code>CALLBACK_SECRET</code>.</li><li><code>timingSafeEqual</code>.</li><li>UUID validation.</li><li>allowlist de hosts.</li><li>proteção contra hosts privados.</li><li>redirects revalidados.</li></ul></div>
+    </div>
+  </section>
+
+  <section id="telegram">
+    <div class="section-head"><div><h2>➤ Telegram</h2><p>Canal de entrega do produto processado.</p></div></div>
+    <div class="card">
+      <div class="grid">
+        <div><h3>Entrega</h3><p>O vídeo pronto pode ser enviado ao Telegram com nome do produto, legenda e hashtags.</p></div>
+        <div><h3>Horário</h3><p>Existe configuração de horário preferido e cálculo do próximo horário.</p></div>
+        <div><h3>Fila</h3><p>Quando há horário configurado, o vídeo entra na fila para entrega futura.</p></div>
+      </div>
+      <p class="small note">Ainda precisa de testes completos de falha, horário, arquivo grande, chat inválido e repetição.</p>
+    </div>
+  </section>
+
+  <section id="pagamentos">
+    <div class="section-head"><div><h2>💰 Pagamentos</h2><p>Estrutura comercial planejada, ainda sem cobrança real no tester.</p></div></div>
+    <div class="card">
+      <h3>Plataforma planejada: Asaas</h3>
+      <p>Meios definidos para a estrutura: <strong>cartão, Pix e boleto</strong>, com assinatura recorrente e webhooks.</p>
+      <div class="rule"><strong>Estado:</strong> o que apareceu no site tester foi somente uma indicação visual. Não considerar pagamentos reais conectados.</div>
+    </div>
+  </section>
+
+  <section id="seguranca">
+    <div class="section-head"><div><h2>🔒 Segurança</h2><p>O que já apareceu e o que ainda precisa ser auditado.</p></div></div>
+    <div class="grid">
+      <div class="card"><h3>Já encontrado</h3><ul><li>Segredo para callback.</li><li>Comparação segura do segredo.</li><li>UUID para produto.</li><li>Allowlist de hosts Shopee.</li><li>Bloqueio de hosts privados.</li><li>Redirect hop-by-hop validado.</li></ul></div>
+      <div class="card"><h3>Auditoria futura</h3><ul><li>Limites de requisição.</li><li>Abuso do downloader.</li><li>Arquivos e permissões.</li><li>Concorrência.</li><li>Logs sem dados sensíveis.</li><li>Falhas e recuperação.</li><li>Revisão de endpoints públicos.</li></ul></div>
+      <div class="card"><h3>Regra</h3><p>Nenhuma proteção deve ser removida só para “fazer funcionar”. O downloader precisa continuar respeitando as validações de segurança.</p></div>
+    </div>
+  </section>
+
+  <section id="testes">
+    <div class="section-head"><div><h2>🧪 Checklist de testes</h2><p>Lista para não considerar uma etapa pronta só porque funcionou uma vez.</p></div></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Área</th><th>Teste</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Upload</td><td>Arquivo válido, inválido e acima do limite</td><td><span class="badge pending">TESTAR</span></td></tr>
+          <tr><td>Processamento</td><td>Sucesso, erro, retry e callback</td><td><span class="badge pending">TESTAR</span></td></tr>
+          <tr><td>Downloader</td><td>Link Shopee, redirects, qualidade e ausência de marca d’água</td><td><span class="badge paused">RETOMAR</span></td></tr>
+          <tr><td>IA</td><td>Legenda, hashtags, resposta inválida e fallback</td><td><span class="badge pending">TESTAR</span></td></tr>
+          <tr><td>Telegram</td><td>Envio, agendamento, chat inválido e repetição</td><td><span class="badge pending">TESTAR</span></td></tr>
+          <tr><td>Planos</td><td>Limite mensal e bloqueio por recurso</td><td><span class="badge pending">IMPLEMENTAR</span></td></tr>
+          <tr><td>Pagamento</td><td>Assinatura, Pix, cartão, boleto e webhook</td><td><span class="badge pending">IMPLEMENTAR</span></td></tr>
+          <tr><td>Mobile</td><td>Fluxo inteiro no celular</td><td><span class="badge pending">TESTAR</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="mobile">
+    <div class="section-head"><div><h2>📱 Regra Mobile-first</h2><p>Uma das decisões mais importantes de UX do projeto.</p></div></div>
+    <div class="card">
+      <h3>O produto deve ser pensado primeiro no celular</h3>
+      <p>Você definiu que a maioria esmagadora dos usuários deverá chegar pelo mobile. Portanto, não basta “adaptar desktop para mobile”. O fluxo principal precisa nascer com telas pequenas em mente.</p>
+      <div class="grid" style="margin-top:15px">
+        <div><h3>Prioridade</h3><p>Colar link, enviar vídeo, processar, visualizar, editar e receber.</p></div>
+        <div><h3>Interface</h3><p>Botões grandes, leitura rápida, poucos elementos por tela e navegação simples.</p></div>
+        <div><h3>Planos</h3><p>Comparação simples, preços claros e recursos explicados em português normal.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="decisoes">
+    <div class="section-head"><div><h2>📜 Decisões que não podem ser perdidas</h2><p>Regras de projeto definidas durante a construção.</p></div></div>
+    <div class="grid">
+      <div class="card"><h3>1. Master separado</h3><p>O Master Command Center é um site/repositório independente. Ele organiza e documenta; não se conecta tecnicamente ao SaaS.</p></div>
+      <div class="card"><h3>2. Downloader próprio</h3><p>Não queremos transformar CopiarLink em parte do produto. O objetivo é construir nossa própria solução.</p></div>
+      <div class="card"><h3>3. Não marcar hipótese como fato</h3><p>Encontrar uma URL no código não prova que ela seja a fonte definitiva. O Master deve diferenciar descoberta, teste e implementação confirmada.</p></div>
+      <div class="card"><h3>4. Diferenciais nos planos</h3><p>Recursos avançados e automações realmente diferenciadas devem justificar os planos Pro e Studio.</p></div>
+      <div class="card"><h3>5. Linguagem simples</h3><p>O usuário deve entender o benefício sem conhecer termos como OCR, overlay ou arquitetura de backend.</p></div>
+      <div class="card"><h3>6. Mobile-first</h3><p>O celular é prioridade de experiência, não uma adaptação posterior.</p></div>
+      <div class="card"><h3>7. Base antes do acabamento</h3><p>O tester visual serve para validar estrutura. Depois entram animações, refinamento e experiência.</p></div>
+      <div class="card"><h3>8. Não perder etapas</h3><p>Cada etapa terá subetapas, estado e próxima ação. Uma tarefa não vira “concluída” só porque existe uma parte dela.</p></div>
+    </div>
+  </section>
+
+  <section id="cronograma">
+    <div class="section-head"><div><h2>📅 Cronograma de trabalho</h2><p>Ordem de execução para não deixar partes importantes para trás.</p></div></div>
+    <div class="timeline">
+      <div class="step"><div class="num">A</div><div><h3>Agora — Master V2</h3><p>Colar este arquivo no <code>index.html</code>, revisar rapidamente e fazer commit no repositório separado.</p></div><span class="badge doing">AGORA</span></div>
+      <div class="step"><div class="num">B</div><div><h3>Próximo bloco — fechar mapa do SaaS</h3><p>Usar este Master para marcar cada subetapa real como feito, desenvolvimento, pendente ou pausado.</p></div><span class="badge pending">PRÓXIMO</span></div>
+      <div class="step"><div class="num">C</div><div><h3>Retomada do Downloader</h3><p>Voltar à implementação própria quando houver créditos disponíveis e continuar a Etapa 2 sem apagar o histórico.</p></div><span class="badge paused">DEPOIS</span></div>
+      <div class="step"><div class="num">D</div><div><h3>Depois — regras dos planos</h3><p>Transformar a matriz comercial em limites e permissões reais no SaaS.</p></div><span class="badge pending">PENDENTE</span></div>
+      <div class="step"><div class="num">E</div><div><h3>Depois — pagamentos</h3><p>Conectar cobrança real e webhooks somente quando a parte de planos estiver pronta para receber.</p></div><span class="badge pending">PENDENTE</span></div>
+      <div class="step"><div class="num">F</div><div><h3>Depois — auditoria + lançamento</h3><p>Testes de ponta a ponta, segurança, mobile, UX, performance e produção.</p></div><span class="badge pending">PENDENTE</span></div>
+    </div>
+  </section>
+
+  <section id="ideias">
+    <div class="section-head"><div><h2>💡 Banco de ideias</h2><p>Ideias não devem virar tarefa automaticamente.</p></div></div>
+    <div class="grid">
+      <div class="card"><h3>Texto que não cobre o produto</h3><p>Detectar áreas importantes do vídeo antes de posicionar texto.</p></div>
+      <div class="card"><h3>Vídeo completo automático</h3><p>Do material bruto ao criativo com texto, narração e estrutura pronta.</p></div>
+      <div class="card"><h3>Produção em massa</h3><p>Permitir que usuários de planos superiores processem muitos produtos com menos intervenção manual.</p></div>
+      <div class="card"><h3>Persona da marca</h3><p>Manter tom e estilo consistentes nas legendas e roteiros.</p></div>
+    </div>
+  </section>
+
+  <section id="changelog">
+    <div class="section-head"><div><h2>📚 Changelog do Master</h2><p>Registro desta versão do documento.</p></div></div>
+    <div class="timeline">
+      <div class="step"><div class="num">V2</div><div><h3>Master Command Center completo</h3><p>Incluídos estado atual, roadmap, subetapas, planos, downloader, IA, edição inteligente, Telegram, infraestrutura, pagamentos, segurança, testes, mobile, decisões, cronograma e ideias.</p></div><span class="badge doing">ATUAL</span></div>
+      <div class="step"><div class="num">V1</div><div><h3>Protótipo visual</h3><p>Primeira versão do site de organização. Serviu para validar a ideia, mas era resumida demais para ser a memória oficial.</p></div><span class="badge done">ARQUIVADO</span></div>
+    </div>
+  </section>
+
+  <section id="fonte">
+    <div class="section-head"><div><h2>🧾 Regra de atualização</h2><p>Como manter este site útil ao longo do projeto.</p></div></div>
+    <div class="card">
+      <ol>
+        <li>Quando uma funcionalidade for realmente implementada no SaaS, mudar o estado aqui.</li>
+        <li>Quando uma decisão mudar, registrar a nova decisão no Master e não apagar o histórico.</li>
+        <li>Quando uma etapa depender de outra, registrar a dependência.</li>
+        <li>Quando algo ainda não foi testado, não marcar como concluído só porque existe código.</li>
+        <li>Quando uma ideia surgir, colocar em “Banco de ideias” antes de transformar em tarefa.</li>
+        <li>Este site continua separado do SaaS e não deve receber credenciais, chaves secretas ou dados de usuários.</li>
+      </ol>
+      <div class="rule"><strong>Princípio principal:</strong> este documento é a memória do projeto. O SaaS é o produto. Um não precisa funcionar para o outro.</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <strong>Shopee Studio — Master Command Center</strong><br>
+    Documento de organização independente do SaaS. Versão de trabalho: 10/08/2026.
+  </footer>
+</main>
+
+<script>
+  const search = document.getElementById('search');
+  const filter = document.getElementById('filter');
+  const items = [...document.querySelectorAll('#roadmap-list .step')];
+  function applyFilter(){
+    const q=(search.value||'').toLowerCase().trim();
+    const f=filter.value;
+    items.forEach(el=>{
+      const okText=!q || (el.dataset.text||'').toLowerCase().includes(q) || el.innerText.toLowerCase().includes(q);
+      const okStatus=f==='all' || el.dataset.status===f;
+      el.classList.toggle('hide',!(okText&&okStatus));
+    });
+  }
+  search.addEventListener('input',applyFilter);
+  filter.addEventListener('change',applyFilter);
+</script>
+</body>
+</html>
